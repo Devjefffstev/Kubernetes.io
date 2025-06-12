@@ -1,0 +1,31 @@
+# you must have installed the ingress controller before applying this file
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:  
+  name: ing-demo-app
+  namespace: demo-app
+  labels:
+    app: demo-app
+    ingress: demo-app-ingress
+spec:
+  ingressClassName: default
+  rules:
+  - host: cosmocincdemoapp.com
+    http:
+      paths:
+      - backend:
+          service:
+            name: svc-ms-test-api
+            port:
+              name: portapi
+        path: /api
+        pathType: Exact
+      - backend:
+          service:
+            name: ms-fronted-app
+            port:
+              name: portadmin
+        path: /home/
+        pathType: Exact
+status:
+  loadBalancer: {}

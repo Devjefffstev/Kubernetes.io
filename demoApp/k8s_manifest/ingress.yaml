@@ -7,6 +7,8 @@ metadata:
   labels:
     app: demo-app
     ingress: demo-app-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
 spec:
   defaultBackend:
     resource:
@@ -23,14 +25,14 @@ spec:
             name: svc-ms-test-api
             port:
               name: portapi
-        path: /api
-        pathType: Prefix
+        path: /api(/|$)(.*)
+        pathType: ImplementationSpecific
       - backend:
           service:
-            name: ms-fronted-app
+            name: svc-ms-fronted-app
             port:
-              name: portadmin
-        path: /home/
+              name: frnt-app
+        path: /home
         pathType: Prefix
 status:
   loadBalancer: {}

@@ -1,29 +1,32 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  creationTimestamp: null
-  labels:
-    app: test-api
   name: test-api
   namespace: demo-app
+  labels:
+    app: test-api
 spec:
   replicas: 2
   selector:
     matchLabels:
       app: test-api
-  strategy: {}
   template:
     metadata:
-      creationTimestamp: null
       labels:
         app: test-api
     spec:
       containers:
-      - image: cosmoincorp/demo:my-fastapi-app
-        name: my-fastapi-app
+      - name: my-fastapi-app
+        image: cosmoincorp/demo:my-fastapi-app
         imagePullPolicy: IfNotPresent
-        resources: {}
-status: {}
+        volumeMounts:
+        - name: mynginxvolume
+          mountPath: /dev/oracleoci/oraclevdb  # You can change this path as needed
+      volumes:
+      - name: mynginxvolume
+        persistentVolumeClaim:
+          claimName: mynginxclaim-5gi
+
 --- 
 apiVersion: v1
 kind: Service
